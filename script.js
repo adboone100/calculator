@@ -67,7 +67,7 @@ function getNum1(e) {
     if(input >= 0  && operator == "" && num1.length <= 14){
     num1 += input;
    }
-   else if(input >= 0 && operator !== "" && num2.length <= 14){
+   else if(input >= 0 && operator !== "" && num2.length <= 14 && compute == ""){
     num2 += input;
    }
    else if(input== "." && operator == "" && checkOneDecimal(num1) == false){
@@ -97,7 +97,7 @@ function getNum1(e) {
     operator = "";
     compute = "";
    }
-   else if(input && operator !== "" && num2 !== "" && compute == "true"){
+   else if((input >= 0 || input == "." || input == "=")  && operator !== "" && num2 !== "" && compute == "true"){
     num1 = "";
     num2 = "";
     operator = "";
@@ -112,6 +112,15 @@ function getNum1(e) {
    else if((input == "+" || input == "-" || input == "%" || input == "×" || input == "÷") && operator == "" && num1 !== ""){
        operator = input;
    }
+   else if((input == "+" || input == "-" || input == "%" || input == "×" || input == "÷") && num1 !== "" && num2 !== "" && operator !== "" && compute !== ""){
+       const answer = document.querySelector(".screen").textContent;
+       num1 = answer;
+       operator = input;
+       compute = "";
+       num2 = "";
+
+   }
+   
     
 }
 
