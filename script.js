@@ -14,6 +14,10 @@ function divide(a,b) {
     return a / b;
 }
 
+function modulo(a,b){
+    return a % b;
+}
+
 function operate(a,b,operator) {
     switch(operator){
         case "+":
@@ -27,7 +31,10 @@ function operate(a,b,operator) {
             break;
         case "÷":
             return divide(a,b);
-            break;       
+            break;
+        case "%":
+            return modulo(a,b);
+            break;      
     }
 }
 
@@ -39,8 +46,8 @@ roundButtons.forEach(button => button.addEventListener('click', function(e) {
     getNum1(e);
     if(compute == "true"){
         let output = operate(Number(num1),Number(num2),operator);
-        console.log(output);
-        screen.textContent = output;
+        let roundedOutput = Math.round(output * 10000) / 10000;
+        screen.textContent = roundedOutput;
     }
     else{
     screen.textContent = `${num1} ${operator} ${num2}`;
@@ -57,11 +64,17 @@ let compute = "";
 
 function getNum1(e) {
     let input = e.target.dataset.key;
-    if((input >= 0 || input== ".") && operator == ""){
+    if(input >= 0  && operator == "" && num1.length <= 14){
     num1 += input;
    }
-   else if((input >= 0 || input== ".") && compute == ""){
+   else if(input >= 0 && operator !== "" && num2.length <= 14){
     num2 += input;
+   }
+   else if(input== "." && operator == "" && checkOneDecimal(num1) == false){
+       num1 += input;
+   }
+   else if(input == "." && operator !== "" && checkOneDecimal(num2) == false){
+       num2 += input;
    }
    else if(input == "AC"){
     num1 = "";
@@ -70,26 +83,41 @@ function getNum1(e) {
     compute = "";
    }
    else if(input == "C" && operator == ""){
-    num1 = ""
+    num1 = "";
    }
-   else if(input == "C" && operator !== "" && compute == ""){ //clear operator
-    operator = ""
+   else if(input == "C" && operator !== "" && num2 == ""){ //clear operator
+    operator = "";
    }
-   else if(input == "C" && operator !== "" && num2 !== ""){
+   else if(input == "C" && operator !== "" && num2 !== "" && compute == ""){
     num2 = "";
    }
-   else if(input == "C" && operator !== "" && compute == "true"){
+   else if(input == "C" && operator !== "" && num2 !== "" && compute == "true"){
     num1 = "";
     num2 = "";
     operator = "";
     compute = "";
    }
-   else if(input == "="){
+   else if(input && operator !== "" && num2 !== "" && compute == "true"){
+    num1 = "";
+    num2 = "";
+    operator = "";
+    compute = "";
+   }
+   else if(input == "=" && num1 !== "" && operator !== "" && num2 !== ""){
        compute = "true";
    }
-   else{
+   else if(input == "="){
+       //do nothing
+   }
+   else if((input == "+" || input == "-" || input == "%" || input == "×" || input == "÷") && operator == "" && num1 !== ""){
        operator = input;
-   }  
+   }
+    
 }
 
+function checkOneDecimal(num) {
+    const numArray = Array.from(num);
+    const oneDecimal = numArray.includes(".")
 
+    return oneDecimal;
+}
